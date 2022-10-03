@@ -16,7 +16,7 @@ import logging
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] [%(threadName)] %(message)s",
+    format="%(asctime)s [%(levelname)s] [%(processName)s] %(message)s",
     handlers=[
         logging.FileHandler("debug.log"),
         logging.StreamHandler()
@@ -73,6 +73,11 @@ async def download_files(*arg):
                 logging.error(f'Houston, we have a problem with line {line_number}n{url}\n')
                 logging.error(f'Exception {e}')
                 data = None
+            except aiohttp.client_exceptions.ClientConnectorError as e:
+                logging.error(f'Houston, we have a connection problem. Looks like we ISP has blocked us.')
+                logging.error(f'Exception {e}')
+                data = None
+
         if data:
             async with aiofiles.open(
                     os.path.join(DATA_FOLDER, sku, fname), "wb"
@@ -115,8 +120,8 @@ if __name__ == '__main__':
 
     del raw_lines
 
-    logging.info(f'Start processing {len(sku_list)} skus\
-     with {len(crops)} links.\n An average of {int(len(crops)/len(sku_list))}')
+    logging.info(f'Start processing {len(sku_list)} skus with {len(crops)} links.')
+    logging.info(f'An average of {int(len(crops)/len(sku_list))} crops per SKU.')
 
     # make all dirs for skus
     for sku in sku_list:

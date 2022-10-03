@@ -1,5 +1,6 @@
-asyncio
-aiohttp
-aiofiles
-tqdm
-numpy
+asyncio~=3.4.3
+aiohttp~=3.8.3
+aiofiles~=22.1.0
+tqdm~=4.64.1
+numpy~=1.23.3
+jupyter
